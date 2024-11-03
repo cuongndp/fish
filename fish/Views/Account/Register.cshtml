@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = null; // Không sử dụng layout
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="~/css/reset.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Màu nền nhẹ */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center; /* Căn giữa nội dung trong form */
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+            button:hover {
+                background-color: #218838;
+            }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+
+        .additional-links {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+            .additional-links a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+                .additional-links a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Đăng ký</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="error">@ViewBag.Error</p>
+        }
+
+        <form method="post" action="@Url.Action("Register", "Account")">
+            <input type="text" id="fullName" name="fullName" placeholder="Họ và tên" required />
+            <input type="email" id="email" name="email" placeholder="Gmail" required />
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại" required />
+            <input type="text" id="username" name="username" placeholder="Username" required />
+            <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu" required />
+
+            <button type="submit">Đăng ký</button>
+        </form>
+
+        <div class="additional-links">
+            <p>Đã có tài khoản? <a href="@Url.Action("Login", "Account")">Đăng nhập</a></p>
+        </div>
+    </div>
+</body>
+</html>

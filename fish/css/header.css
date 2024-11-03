@@ -1,0 +1,36 @@
+﻿/* Sử dụng font Roboto cho phần thông tin người dùng */
+.logged-in-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #2dcee3; /* Nền màu xanh đậm */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif; /* Sử dụng font Roboto */
+}
+
+    .logged-in-info span {
+        font-weight: bold;
+        color: #fff; /* Màu chữ trắng để nổi bật */
+        font-size: 1.1em; /* Tăng kích thước chữ để dễ nhìn hơn */
+    }
+
+/* Định dạng cho nút Đăng xuất */
+.logout-button {
+    padding: 8px 12px;
+    border: 2px solid #ffffff; /* Viền màu trắng */
+    color: #ffffff; /* Màu chữ trắng */
+    background-color: transparent;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif; /* Sử dụng font Roboto */
+    transition: 0.3s ease;
+    font-size: 1em; /* Kích thước chữ để phù hợp với văn bản */
+}
+
+    .logout-button:hover {
+        background-color: #ff4b5c; /* Nền màu đỏ nhạt khi hover */
+        color: #fff; /* Màu chữ vẫn giữ là trắng */
+    }

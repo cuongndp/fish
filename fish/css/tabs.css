@@ -1,0 +1,11 @@
+.tabs>div { position:relative; overflow:hidden;}
+.tabs .tab-content {width:750px;}
+.tabs ul.nav {list-style-image:none; display:inline-block; overflow:hidden; }
+.tabs ul.nav li {font-size:14px; line-height:17px;
+font-family: Arial, Helvetica, sans-serif;margin:6px 10px 7px 0;display: inline-block;}
+.tabs ul.nav li a {color:#29d3e3;background: url(../images/bg-li-list.png) left 4px no-repeat;padding-left:20px;display:inline-block;}
+.tabs ul.nav li.selected, .tabs ul.nav li:hover {}
+.tabs ul.nav li.selected a, .tabs ul.nav li:hover a{color:#000;}
+
+	
+	

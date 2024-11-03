@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/reset.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/header.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/grid_24.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/superfish.css">
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/images/favicon.ico" type="image/x-icon" />
+    <script src="~/js/jquery-1.7.min.js"></script>
+    <script src="~/js/jquery.easing.1.3.js"></script>
+    <script src="~/js/superfish.js"></script>
+    <script src="~/js/jquery.hoverIntent.minified.js"></script>
+    <script src="~/js/jquery.roundabout.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            $('.roundabout').roundabout({
+                btnNext: ".next",
+                btnPrev: ".prev",
+                duration: 600,
+                reflect: false,
+                shape: 'square'
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Phần header sẽ được chèn từ _Header.cshtml -->
+    @Html.Partial("_Header")
+
+    <div class="main" id="top">
+        <div class="main-1">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
