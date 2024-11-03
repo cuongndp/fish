@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Mvc;
+using System.Globalization;
+using System.Web.Security;
 using fish.Models; // Import model User và DbContext
 
 namespace fish.Controllers
@@ -30,6 +34,12 @@ namespace fish.Controllers
                 // Đăng nhập thành công
                 Session["UserId"] = user.Id;
                 Session["FullName"] = user.FullName;
+                Session["PhoneNumber"] = user.PhoneNumber; // Lưu số điện thoại vào Session
+                Session["Email"] = user.Email;
+
+
+                FormsAuthentication.SetAuthCookie(username, false);
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -85,9 +95,92 @@ namespace fish.Controllers
         {
             // Xóa tất cả thông tin lưu trữ trong Session
             Session.Clear();
-            // Chuyển hướng đến trang đăng nhập hoặc trang chủ sau khi đăng xuất
-            return RedirectToAction("Login", "Account");
+
+            // Xóa cookie xác thực Forms
+            FormsAuthentication.SignOut();
+
+            // Chuyển hướng đến trang chủ sau khi đăng xuất
+            return RedirectToAction("Index", "Home");
         }
+
+
+
+
+        [Authorize]
+        public ActionResult BookingForm()
+        {
+            // Gỡ lỗi: kiểm tra xem Session có hoạt động không
+            if (Session["UserId"] == null)
+            {
+                // Nếu không có thông tin đăng nhập, chuyển hướng về trang đăng nhập
+                return RedirectToAction("Login", "Account");
+            }
+
+
+            return View("~/Views/DichVu/Form.cshtml");
+        }
+
+
+
+
+        [HttpPost]
+        [Authorize] // Cũng yêu cầu đăng nhập khi gửi dữ liệu
+        public ActionResult SubmitBooking(string fullName, string phoneNumber, string email, string ngayHen, string gioHen, string moTa)
+        {
+            DateTime parsedNgayHen;
+            TimeSpan parsedGioHen;
+
+            // Chuyển đổi chuỗi ngày thành DateTime
+            string[] formats = { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "dd-MM-yyyy", "yyyy/MM/dd" };
+
+            if (!DateTime.TryParseExact(ngayHen, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedNgayHen))
+            {
+                ViewBag.Error = "Ngày hẹn không hợp lệ.";
+                return View("~/Views/DichVu/Form.cshtml");
+            }
+
+
+
+
+
+            // Chuyển đổi chuỗi giờ thành TimeSpan
+            if (!TimeSpan.TryParse(gioHen, out parsedGioHen))
+            {
+                ViewBag.Error = "Giờ hẹn không hợp lệ.";
+                return View("~/Views/DichVu/Form.cshtml");
+            }
+
+            // Tạo một đối tượng Booking mới
+            var booking = new Booking
+            {
+                FullName = Session["FullName"]?.ToString(), // Lấy từ Session
+                PhoneNumber = Session["PhoneNumber"]?.ToString(), // Lấy từ Session
+                Email = Session["Email"]?.ToString(), // Lấy từ Session
+                NgayHen = parsedNgayHen, // Sử dụng DateTime cho Ngày Hẹn
+                GioHen = parsedGioHen,   // Sử dụng TimeSpan cho Giờ Hẹn
+                MoTa = moTa,             // Gán mô tả từ form
+                UserId = Convert.ToInt32(Session["UserId"]) // Gán UserId từ Session
+            };
+
+            // Thêm đối tượng vào DbSet và lưu thay đổi
+            try
+            {
+                db.Bookings.Add(booking);
+                db.SaveChanges();
+                ViewBag.Message = "Đặt lịch thành công!";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Đã xảy ra lỗi: " + ex.Message;
+                return View("~/Views/DichVu/Form.cshtml");
+            }
+
+
+            return View("~/Views/DichVu/Form.cshtml");
+
+        }
+
+
 
 
 
@@ -105,6 +198,12 @@ namespace fish.Controllers
             }
         }
     }
-   
+
+
+
+
+
+    
+    
 
 }

@@ -30,12 +30,17 @@
     </script>
 </head>
 <body>
-    <!-- Phần header sẽ được chèn từ _Header.cshtml -->
+    <!-- Phần header sẽ được chèn từ _Header.cshtml -->F
     @Html.Partial("_Header")
 
     <div class="main" id="top">
         <div class="main-1">
             @RenderBody()
+            <footer>
+                <div class="footer-content">
+                    <p>&copy; 2024 Trung Tâm Dịch Vụ Thú Y. Tất cả các quyền được bảo lưu. </a></p>
+                </div>
+            </footer>
         </div>
     </div>
 </body>

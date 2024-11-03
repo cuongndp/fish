@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Dịch Vụ Thú Y";
+}
+
+<!--==============================content================================-->
+<section id="content">
+    <div class="container">
+        <h1 class="main-heading">Dịch Vụ Thú Y Cho Cá Koi</h1>
+        <p class="intro-text">Chúng tôi cung cấp các dịch vụ thú y toàn diện để đảm bảo sức khỏe và hạnh phúc cho những chú cá koi yêu quý của bạn.</p>
+
+        <!-- Danh sách dịch vụ -->
+        <div class="services-list">
+            <div class="service-item">
+                <h2>1. Khám Sức Khỏe Tổng Quát</h2>
+                <p>Đánh giá tình trạng sức khỏe tổng thể của cá koi, kiểm tra các dấu hiệu bất thường và đưa ra tư vấn phù hợp.</p>
+                <a href="/DichVu/Form" class="btn-book-appointment">Đặt Lịch Khám</a>
+            </div>
+
+            <div class="service-item">
+                <h2>2. Điều Trị Bệnh Truyền Nhiễm</h2>
+                <p>Điều trị các bệnh do nấm, vi khuẩn, ký sinh trùng và các vấn đề khác ảnh hưởng đến cá koi.</p>
+                <a href="/DichVu/Form" class="btn-book-appointment">Đặt Lịch Khám</a>
+            </div>
+
+            <div class="service-item">
+                <h2>3. Xét Nghiệm Chất Lượng Nước</h2>
+                <p>Kiểm tra các thông số nước như pH, ammonia, nitrite để duy trì môi trường sống lý tưởng cho cá koi.</p>
+                <a href="/DichVu/Form" class="btn-book-appointment">Đặt Lịch Khám</a>
+            </div>
+
+            <div class="service-item">
+                <h2>4. Phẫu Thuật Và Điều Trị Vết Thương</h2>
+                <p>Chăm sóc và xử lý các vết thương hoặc phẫu thuật cần thiết để giúp cá koi hồi phục tốt nhất.</p>
+                <a href="/DichVu/Form" class="btn-book-appointment">Đặt Lịch Khám</a>
+            </div>
+
+            <div class="service-item">
+                <h2>5. Tư Vấn Dinh Dưỡng Và Chăm Sóc</h2>
+                <p>Cung cấp các lời khuyên về dinh dưỡng và chăm sóc đúng cách để cá koi phát triển khỏe mạnh.</p>
+                <a href="/DichVu/Form" class="btn-book-appointment">Đặt Lịch Khám</a>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--==============================footer=================================-->
+
+
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .main-heading {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+    }
+
+    .intro-text {
+        text-align: center;
+        font-size: 1.2em;
+        margin-bottom: 40px;
+    }
+
+    .services-list {
+        display: flex; /* ĐÃ CHỈNH SỬA: Chuyển từ grid sang flexbox */
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center; /* ĐÃ CHỈNH SỬA: Căn giữa các mục */
+    }
+
+    .service-item {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        flex: 1 1 calc(33.333% - 40px); /* ĐÃ CHỈNH SỬA: Đặt kích thước linh hoạt cho các mục */
+        max-width: 300px; /* ĐÃ CHỈNH SỬA: Giới hạn chiều rộng tối đa */
+    }
+
+        .service-item h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .service-item p {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+    .btn-book-appointment {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        text-align: center;
+    }
+
+        .btn-book-appointment:hover {
+            background-color: #0056b3;
+        }
+
+    .footer-content {
+        text-align: center;
+        padding: 20px;
+        background-color: #222;
+        color: #fff;
+    }
+
+        .footer-content a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+</style>

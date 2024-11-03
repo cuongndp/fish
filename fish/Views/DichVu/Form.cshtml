@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Lịch Khám</title>
+    <style>
+        /* CSS cơ bản để tạo kiểu cho trang */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-heading {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .btn-submit:hover {
+                background-color: #0056b3;
+            }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-heading">Đặt Lịch Khám Cho Cá Koi</h1>
+
+        <!-- Hiển thị thông báo thành công nếu có -->
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success">@ViewBag.Message</div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+
+        <form action="/Account/SubmitBooking" method="post">
+            <!-- Hiển thị thông tin khách hàng đã đăng nhập -->
+            <div class="form-group">
+                <label>Họ và Tên:</label>
+                <p>@Session["FullName"]</p>
+            </div>
+
+            <div class="form-group">
+                <label>Số Điện Thoại:</label>
+                <p>@Session["PhoneNumber"]</p> <!-- Thêm thông tin số điện thoại từ Session hoặc cơ sở dữ liệu -->
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <p>@Session["Email"]</p> <!-- Thêm thông tin email từ Session hoặc cơ sở dữ liệu -->
+            </div>
+
+            <!-- Chọn ngày và giờ -->
+            <div class="form-group">
+                <label for="appointmentDate">Ngày Hẹn:</label>
+                <input type="date" id="appointmentDate" name="ngayHen" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentTime">Giờ Hẹn:</label>
+                <input type="time" id="appointmentTime" name="gioHen" class="form-control" required>
+            </div>
+
+            <!-- Mô tả về vấn đề của cá koi -->
+            <div class="form-group">
+                <label for="description">Mô Tả Vấn Đề Của Cá Koi:</label>
+                <textarea id="description" name="moTa" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Đặt Lịch</button>
+        </form>
+    </div>
+</body>
+</html>

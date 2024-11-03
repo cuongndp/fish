@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace fish.Controllers
 {
-    public class Index2Controller : Controller
+    public class DichVuController : Controller
     {
         // GET: Index2
         public ActionResult Index()

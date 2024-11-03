@@ -12,5 +12,6 @@ namespace fish.Models
         public ApplicationDbContext() : base("DefaultConnection") { }
 
         public DbSet<User> Users { get; set; } // Tạo DbSet cho bảng Users
+        public DbSet<Booking> Bookings { get; set; }
     }
 }

@@ -121,7 +121,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Index1Controller.cs" />
-    <Compile Include="Controllers\Index2Controller.cs" />
+    <Compile Include="Controllers\DichVuController.cs" />
     <Compile Include="Controllers\Index3Controller.cs" />
     <Compile Include="Controllers\Index4Controller.cs" />
     <Compile Include="Controllers\Index5Controller.cs" />
@@ -133,8 +133,21 @@
     <Compile Include="Migrations\202411031109405_InitialCreate.Designer.cs">
       <DependentUpon>202411031109405_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202411031931003_InitialCreate1.cs" />
+    <Compile Include="Migrations\202411031931003_InitialCreate1.Designer.cs">
+      <DependentUpon>202411031931003_InitialCreate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411031936167_AddUserBookingRelation.cs" />
+    <Compile Include="Migrations\202411031936167_AddUserBookingRelation.Designer.cs">
+      <DependentUpon>202411031936167_AddUserBookingRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411032003026_UpdateBookingModel.cs" />
+    <Compile Include="Migrations\202411032003026_UpdateBookingModel.Designer.cs">
+      <DependentUpon>202411032003026_UpdateBookingModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -297,7 +310,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Index1\Index.cshtml" />
-    <Content Include="Views\Index2\Index.cshtml" />
+    <Content Include="Views\DichVu\Index.cshtml" />
     <Content Include="Views\Index3\Index.cshtml" />
     <Content Include="Views\Index4\Index.cshtml" />
     <Content Include="Views\Index5\Index.cshtml" />
@@ -305,6 +318,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\DichVu\Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -339,6 +353,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202411031109405_InitialCreate.resx">
       <DependentUpon>202411031109405_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411031931003_InitialCreate1.resx">
+      <DependentUpon>202411031931003_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411031936167_AddUserBookingRelation.resx">
+      <DependentUpon>202411031936167_AddUserBookingRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411032003026_UpdateBookingModel.resx">
+      <DependentUpon>202411032003026_UpdateBookingModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
