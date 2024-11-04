@@ -22,6 +22,13 @@
             padding: 20px;
         }
 
+        .table-container {
+            overflow-x: auto; /* Tạo thanh cuộn ngang khi cần */
+            max-width: 100%; /* Giới hạn chiều rộng để phù hợp với kích thước của trang */
+            white-space: nowrap; /* Không cho nội dung xuống dòng */
+        }
+    
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -104,9 +111,6 @@
             gap: 15px;
             font-size: 1.1em;
         }
-
-
-
     </style>
 </head>
 <body>
@@ -125,7 +129,7 @@
         }
     </ul>
 
-    <div class="container">
+    <div class="container table-container" >
         <div class="header">
             <h1>Quản Lý Dịch Vụ và Người Dùng</h1>
         </div>
@@ -143,17 +147,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var service in ViewBag.Services)
+                @if (ViewBag.Bookings != null && ViewBag.Bookings.Any())
+                {
+                    foreach (var booking in ViewBag.Bookings)
+                    {
+                        <tr>
+                            <td>@booking.Id</td>
+                            <td>@(booking.User != null ? booking.User.FullName : "Không có thông tin người dùng")</td>
+                            <td>@(booking.NgayHen != null ? booking.NgayHen.ToString("dd/MM/yyyy") : "Không có ngày hẹn")</td>
+                            <td>@booking.GioHen</td>
+                            <td>@booking.MoTa</td>
+                            <td>
+                                <a href="@Url.Action("EditBooking", "Admin", new { id = booking.Id })" class="btn btn-edit">Sửa</a>
+                                <a href="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })" class="btn btn-delete">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@service.Id</td>
-                        <td>@service.TenDichVu</td>
-                        <td>@service.MoTaDichVu</td>
-                        <td>@service.Gia</td>
-                        <td>
-                            <a href="@Url.Action("EditService", "Admin", new { id = service.Id })" class="btn btn-edit">Sửa</a>
-                            <a href="@Url.Action("DeleteService", "Admin", new { id = service.Id })" class="btn btn-delete">Xóa</a>
-                        </td>
+                        <td colspan="6">Không có dữ liệu đặt lịch để hiển thị.</td>
                     </tr>
                 }
             </tbody>
@@ -167,6 +181,7 @@
                     <th>ID</th>
                     <th>Họ và Tên</th>
                     <th>Email</th>
+                    <th>Số Điện Thoại</th> <!-- Thêm cột Số Điện Thoại -->
                     <th>Vai Trò</th>
                     <th>Hành Động</th>
                 </tr>
@@ -178,11 +193,16 @@
                         <td>@user.Id</td>
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td> <!-- Số Điện Thoại -->
                         <td>@user.Role</td>
                         <td>
                             <a href="@Url.Action("AdminOnlyAction", "Admin", new { editUserId = user.Id })" class="btn btn-edit">Sửa</a>
 
-                            <a href="@Url.Action("DeleteUser", "Admin", new { id = user.Id })" class="btn btn-delete">Xóa</a>
+                            <form action="@Url.Action("DeleteUser", "Admin", new { id = user.Id })" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken() <!-- Token chống CSRF để bảo mật -->
+                                <button type="submit" class="btn btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">Xóa</button>
+                            </form>
+
                         </td>
                     </tr>
                 }
@@ -218,16 +238,23 @@
             <input type="email" name="Email" value="@ViewBag.UserToEdit.Email" class="form-control" />
         </div>
 
+        <!-- Thêm mục chỉnh sửa Số Điện Thoại -->
+        <div class="form-group">
+            <label for="PhoneNumber">Số Điện Thoại</label>
+            <input type="text" name="PhoneNumber" value="@ViewBag.UserToEdit.PhoneNumber" class="form-control" />
+        </div>
+
+
         <div class="form-group">
             <label for="Role">Vai Trò</label>
             <select name="Role" class="form-control">
-                <option value="Customer" @(ViewBag.UserToEdit.Role == "Customer" ? "selected" : "")>Customer</option>
+                <option value="Khách Hàng" @(ViewBag.UserToEdit.Role == "Khách Hàng" ? "selected" : "")>Khách Hàng</option>
                 <option value="Doctor" @(ViewBag.UserToEdit.Role == "Doctor" ? "selected" : "")>Doctor</option>
                 <option value="Admin" @(ViewBag.UserToEdit.Role == "Admin" ? "selected" : "")>Admin</option>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+        <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer">Cập Nhật</button>
     }
 }
 

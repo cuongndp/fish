@@ -71,10 +71,13 @@ namespace fish.Controllers
 
         // POST: Account/Register
         [HttpPost]
-        public ActionResult Register(string fullName, string email, string phoneNumber, string username, string role, string password, string confirmPassword, string rolePassword)
+        public ActionResult Register(string fullName, string email, string phoneNumber, string username, string role, string password/*, string confirmPassword*/, string rolePassword)
         {
             string doctorPassword = "khongcapchotao";
             string adminPassword = "taokhongcap";
+
+
+            
 
             // Kiểm tra mật khẩu cấp quyền cho Bác Sĩ
             if (role == "Doctor" && rolePassword != doctorPassword)
@@ -89,20 +92,37 @@ namespace fish.Controllers
                 ViewBag.Error = "Mật khẩu không đúng cho vai trò Quản Trị Viên.";
                 return View();
             }
-
+            /*
             // Kiểm tra nếu mật khẩu xác nhận không khớp (chỉ dành cho người dùng thông thường)
             if (role == "Customer" && password != confirmPassword)
             {
                 ViewBag.Error = "Mật khẩu xác nhận không khớp.";
                 return View();
             }
-
+            */
             // Kiểm tra xem người dùng đã tồn tại chưa
             if (db.Users.Any(u => u.Username == username))
             {
                 ViewBag.Error = "Tên đăng nhập đã tồn tại.";
                 return View();
             }
+
+
+
+            // Kiểm tra xem người dùng đã tồn tại chưa
+            if (db.Users.Any(u => u.Email == email))
+            {
+                ViewBag.Error = "Email đã tồn tại.";
+                return View();
+            }
+
+
+            if (db.Users.Any(u => u.PhoneNumber == phoneNumber))
+            {
+                ViewBag.Error = "Số điện thoại đã tồn tại.";
+                return View();
+            }
+
 
             // Tạo người dùng mới và thêm vào cơ sở dữ liệu
             var user = new User
@@ -145,7 +165,7 @@ namespace fish.Controllers
             // Kiểm tra xem người dùng có vai trò Admin không
             if (Session["Role"]?.ToString() != "Admin")
             {
-                return RedirectToAction("AccessDenied", "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             // Nếu là Admin, cho phép truy cập
@@ -270,7 +290,7 @@ namespace fish.Controllers
         {
             if (Session["Role"]?.ToString() != "Admin")
             {
-                return RedirectToAction("AccessDenied", "Account");
+                return RedirectToAction("Login", "Account");
             }
             ViewBag.Users = db.Users.ToList();
             ViewBag.Services = db.Services.ToList();
@@ -356,6 +376,7 @@ namespace fish.Controllers
         public ActionResult ManageBookings()
         {
             var bookings = db.Bookings.Include("Service").Include("User").ToList();
+            ViewBag.Bookings = bookings;// Gán danh sách lịch đặt vào ViewBag
             return View(bookings);
         }
 
@@ -364,6 +385,7 @@ namespace fish.Controllers
         public ActionResult AssignDoctor(int id)
         {
             var booking = db.Bookings.Find(id);
+
             if (booking == null)
             {
                 return HttpNotFound();
@@ -418,7 +440,7 @@ namespace fish.Controllers
             if (Session["Role"]?.ToString() != "Admin")
             {
                 
-                return RedirectToAction("AccessDenied", "Account");
+                return RedirectToAction("Login", "Account");
             }
 
             if (ModelState.IsValid)
@@ -432,6 +454,7 @@ namespace fish.Controllers
                 // Cập nhật thông tin người dùng
                 existingUser.FullName = user.FullName;
                 existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
                 existingUser.Role = user.Role;
 
                 db.Entry(existingUser).State = System.Data.Entity.EntityState.Modified;
@@ -453,10 +476,15 @@ namespace fish.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+      
         [ValidateAntiForgeryToken] // Sử dụng để xác thực mã AntiForgeryToken
         public ActionResult DeleteUser(int id)
         {
+            if (Session["Role"]?.ToString() != "Admin")
+            {
+
+                return RedirectToAction("Login", "Account");
+            }
             var user = db.Users.Find(id);
             if (user == null)
             {

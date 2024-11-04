@@ -2,6 +2,11 @@
     ViewBag.Title = "Register";
     Layout = null; // Không sử dụng layout
 }
+@if (ViewBag.SelectedRole == null)
+{
+    ViewBag.SelectedRole = "Khách Hàng";
+}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -93,7 +98,7 @@
             <div class="form-group">
                 <label for="role">Vai Trò:</label>
                 <select id="role" name="role" class="form-control" onchange="this.form.submit()">
-                    <option value="Customer" @(ViewBag.SelectedRole == "Customer" ? "selected" : "")>Khách Hàng</option>
+                    <option value="Khách Hàng" @(ViewBag.SelectedRole == "Khách Hàng" ? "selected" : "")>Khách Hàng</option>
                     <option value="Doctor" @(ViewBag.SelectedRole == "Doctor" ? "selected" : "")>Bác Sĩ</option>
                     <option value="Admin" @(ViewBag.SelectedRole == "Admin" ? "selected" : "")>Admin</option>
                 </select>
