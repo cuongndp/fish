@@ -1,6 +1,235 @@
 ﻿@{
-    ViewBag.Title = "Quản Trị Viên Chỉ Định";
+    ViewBag.Title = "Admin Dashboard";
+    Layout = null; // Không sử dụng layout cũ
 }
 
-<h2>Trang Chỉ Dành Cho Quản Trị Viên</h2>
-<p>Chào mừng, đây là trang dành riêng cho quản trị viên. Bạn có thể quản lý toàn bộ hệ thống tại đây.</p>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="~/css/admin.css"> <!-- Thêm đường dẫn đến file CSS tùy chỉnh -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .header h1 {
+                font-size: 2em;
+                color: #333;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f8f8;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+
+
+
+
+
+
+        .logout-button-unique {
+            background-color: #ff6347; /* Màu cam đỏ nổi bật */
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .logout-button-unique:hover {
+                background-color: #e5533c; /* Màu hơi tối hơn khi hover */
+            }
+
+        .logged-in-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1em;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <ul class="user-auth-menu">
+        @if (Session["FullName"] != null)
+        {
+            <div class="logged-in-info">
+                <span>Xin chào, @Session["FullName"]!</span>
+                <a href="@Url.Action("Logout", "Account")" class="logout-button-unique">Đăng xuất</a>
+            </div>
+        }
+        else
+        {
+            <li>@Html.ActionLink("Đăng ký", "Register", "Account")</li>
+            <li>@Html.ActionLink("Đăng nhập", "Login", "Account")</li>
+        }
+    </ul>
+
+    <div class="container">
+        <div class="header">
+            <h1>Quản Lý Dịch Vụ và Người Dùng</h1>
+        </div>
+
+        <!-- Bảng danh sách dịch vụ -->
+        <h2>Danh Sách Dịch Vụ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Dịch Vụ</th>
+                    <th>Mô Tả</th>
+                    <th>Giá</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var service in ViewBag.Services)
+                {
+                    <tr>
+                        <td>@service.Id</td>
+                        <td>@service.TenDichVu</td>
+                        <td>@service.MoTaDichVu</td>
+                        <td>@service.Gia</td>
+                        <td>
+                            <a href="@Url.Action("EditService", "Admin", new { id = service.Id })" class="btn btn-edit">Sửa</a>
+                            <a href="@Url.Action("DeleteService", "Admin", new { id = service.Id })" class="btn btn-delete">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Bảng danh sách người dùng -->
+        <h2>Danh Sách Người Dùng</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Họ và Tên</th>
+                    <th>Email</th>
+                    <th>Vai Trò</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in ViewBag.Users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <a href="@Url.Action("AdminOnlyAction", "Admin", new { editUserId = user.Id })" class="btn btn-edit">Sửa</a>
+
+                            <a href="@Url.Action("DeleteUser", "Admin", new { id = user.Id })" class="btn btn-delete">Xóa</a>
+                        </td>
+                    </tr>
+                }
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+@if (ViewBag.UserToEdit != null)
+{
+    <h3>Chỉnh Sửa Thông Tin Người Dùng</h3>
+    using (Html.BeginForm("EditUserInAdmin", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken() <!-- Thêm mã bảo mật để chống CSRF -->
+
+        <input type="hidden" name="Id" value="@ViewBag.UserToEdit.Id" />
+
+
+
+        <div class="form-group">
+            <label for="FullName">Họ và Tên</label>
+            <input type="text" name="FullName" value="@ViewBag.UserToEdit.FullName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <input type="email" name="Email" value="@ViewBag.UserToEdit.Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="Role">Vai Trò</label>
+            <select name="Role" class="form-control">
+                <option value="Customer" @(ViewBag.UserToEdit.Role == "Customer" ? "selected" : "")>Customer</option>
+                <option value="Doctor" @(ViewBag.UserToEdit.Role == "Doctor" ? "selected" : "")>Doctor</option>
+                <option value="Admin" @(ViewBag.UserToEdit.Role == "Admin" ? "selected" : "")>Admin</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+    }
+}
+
+
+

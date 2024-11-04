@@ -39,7 +39,21 @@ namespace fish.Controllers
                 Session["Email"] = user.Email;
                 Session["Role"] = user.Role; // Thêm vai trò của người dùng vào Session
 
+
+                Console.WriteLine("Role after login: " + Session["Role"]);
+               
                 FormsAuthentication.SetAuthCookie(username, false);
+
+
+
+                // Chuyển hướng đến trang dành cho Admin nếu người dùng là Admin
+                if (user.Role == "Admin")
+                {
+                    return RedirectToAction("AdminOnlyAction", "Admin");
+                }
+
+
+
 
                 return RedirectToAction("Index", "Home");
             }
@@ -237,36 +251,6 @@ namespace fish.Controllers
 
     }
 
-    /*
-    public class AdminController : Controller
-    {
-        [Authorize(Roles = "Admin,Doctor")]
-        public ActionResult ManageServices()
-        {
-
-            // Logic xử lý cho việc quản lý dịch vụ
-            return View();
-        }
-
-        [Authorize] // Chỉ cho phép người dùng đã đăng nhập truy cập
-        public ActionResult AdminOnlyAction()
-        {
-            if (Session["Role"]?.ToString() != "Admin")
-            {
-                return RedirectToAction("AccessDenied", "Account");
-            }
-
-            // Nếu người dùng là Admin, cho phép truy cập
-            return View();
-        }
-    }
-
-
-    */
-
-
-
-    /*
 
     public class AdminController : Controller
     {
@@ -280,15 +264,30 @@ namespace fish.Controllers
             return View(services);
         }
 
-        [Authorize] // Chỉ cho phép người dùng đã đăng nhập truy cập
-        public ActionResult AdminOnlyAction()
+        [Authorize]
+       
+        public ActionResult AdminOnlyAction(int? editUserId = null)
         {
             if (Session["Role"]?.ToString() != "Admin")
             {
                 return RedirectToAction("AccessDenied", "Account");
             }
+            ViewBag.Users = db.Users.ToList();
+            ViewBag.Services = db.Services.ToList();
 
-            // Nếu người dùng là Admin, cho phép truy cập
+
+            if (editUserId.HasValue)
+            {
+                var userToEdit = db.Users.Find(editUserId);
+                if (userToEdit != null)
+                {
+                    ViewBag.UserToEdit = userToEdit;
+                }
+            }
+
+
+
+
             return View();
         }
 
@@ -300,7 +299,8 @@ namespace fish.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult CreateService(Service service)
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateService(fish.Models.Service service)
         {
             if (ModelState.IsValid)
             {
@@ -324,7 +324,8 @@ namespace fish.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult EditService(Service service)
+        [ValidateAntiForgeryToken]
+        public ActionResult EditService(fish.Models.Service service)
         {
             if (ModelState.IsValid)
             {
@@ -334,8 +335,9 @@ namespace fish.Controllers
             }
             return View(service);
         }
-
+        [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken] // Sử dụng để xác thực mã AntiForgeryToken
         public ActionResult DeleteService(int id)
         {
             var service = db.Services.Find(id);
@@ -347,92 +349,124 @@ namespace fish.Controllers
             db.SaveChanges();
             return RedirectToAction("ManageServices");
         }
-    }
-    */
 
 
-
-
-
-    public class AdminController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext(); // Khai báo DbContext để làm việc với cơ sở dữ liệu
-
+        // Hiển thị danh sách lịch đặt của khách hàng
         [Authorize(Roles = "Admin,Doctor")]
-        public ActionResult ManageServices()
+        public ActionResult ManageBookings()
         {
-            // Lấy danh sách các dịch vụ từ cơ sở dữ liệu để hiển thị
-            var services = db.Services.ToList();
-            return View(services);
+            var bookings = db.Bookings.Include("Service").Include("User").ToList();
+            return View(bookings);
         }
 
-        [Authorize] // Chỉ cho phép người dùng đã đăng nhập truy cập
-        public ActionResult AdminOnlyAction()
+        // Chọn bác sĩ để khám cho lịch đặt
+        [Authorize(Roles = "Admin")]
+        public ActionResult AssignDoctor(int id)
+        {
+            var booking = db.Bookings.Find(id);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Lấy danh sách bác sĩ từ cơ sở dữ liệu để chọn
+            ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
+
+            return View(booking);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult AssignDoctor(int id, int doctorId)
+        {
+            var booking = db.Bookings.Find(id);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+
+            var doctor = db.Users.Find(doctorId);
+            if (doctor == null || doctor.Role != "Doctor")
+            {
+                ViewBag.Error = "Bác sĩ không hợp lệ.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
+                return View(booking);
+            }
+
+            // Gán bác sĩ cho lịch đặt
+            booking.UserId = doctorId;
+            db.Entry(booking).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("ManageBookings");
+        }
+
+        // Quản lý thông tin người dùng (thêm, sửa, xóa)
+        [Authorize(Roles = "Admin")]
+        public ActionResult ManageUsers()
+        {
+            var users = db.Users.ToList();
+            return View(users);
+        }
+
+
+        [HttpPost]
+        
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUserInAdmin(User user)
         {
             if (Session["Role"]?.ToString() != "Admin")
             {
+                
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            // Nếu người dùng là Admin, cho phép truy cập
-            return View();
+            if (ModelState.IsValid)
+            {
+                var existingUser = db.Users.Find(user.Id);
+                if (existingUser == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cập nhật thông tin người dùng
+                existingUser.FullName = user.FullName;
+                existingUser.Email = user.Email;
+                existingUser.Role = user.Role;
+
+                db.Entry(existingUser).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("AdminOnlyAction");
+            }
+
+            // Nếu không thành công, truyền lại danh sách người dùng và dịch vụ
+            ViewBag.Users = db.Users.ToList();
+            ViewBag.Services = db.Services.ToList();
+            ViewBag.UserToEdit = user;  // Giữ lại thông tin người dùng vừa nhập để hiển thị lại
+
+            return View("AdminOnlyAction");
         }
 
-        [Authorize(Roles = "Admin")]
-        public ActionResult CreateService()
-        {
-            return View();
-        }
+
+
+
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult CreateService(CustomService service)
+        [ValidateAntiForgeryToken] // Sử dụng để xác thực mã AntiForgeryToken
+        public ActionResult DeleteUser(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Services.Add(service);
-                db.SaveChanges();
-                return RedirectToAction("ManageServices");
-            }
-            return View(service);
-        }
-
-        [Authorize(Roles = "Admin")]
-        public ActionResult EditService(int id)
-        {
-            var service = db.Services.Find(id);
-            if (service == null)
+            var user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(service);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public ActionResult EditService(CustomService service)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(service).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("ManageServices");
-            }
-            return View(service);
-        }
-
-        [Authorize(Roles = "Admin")]
-        public ActionResult DeleteService(int id)
-        {
-            var service = db.Services.Find(id);
-            if (service == null)
-            {
-                return HttpNotFound();
-            }
-            db.Services.Remove(service);
+            db.Users.Remove(user);
             db.SaveChanges();
-            return RedirectToAction("ManageServices");
+            return RedirectToAction("AdminOnlyAction"); // Trang quản lý người dùng
         }
+
     }
 
 
