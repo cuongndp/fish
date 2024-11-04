@@ -1,0 +1,36 @@
+﻿@model IEnumerable<fish.Models.Service>
+
+@{
+    ViewBag.Title = "Quản Lý Dịch Vụ";
+}
+
+<h2>Quản Lý Dịch Vụ</h2>
+
+<p>
+    <a href="@Url.Action("CreateService", "Admin")" class="btn btn-primary">Thêm Dịch Vụ Mới</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên Dịch Vụ</th>
+            <th>Mô Tả</th>
+            <th>Giá</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in Model)
+        {
+            <tr>
+                <td>@service.TenDichVu</td>
+                <td>@service.MoTaDichVu</td>
+                <td>@service.Gia</td>
+                <td>
+                    <a href="@Url.Action("EditService", "Admin", new { id = service.Id })" class="btn btn-warning">Chỉnh Sửa</a>
+                    <a href="@Url.Action("DeleteService", "Admin", new { id = service.Id })" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

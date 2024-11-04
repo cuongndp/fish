@@ -145,9 +145,26 @@
     <Compile Include="Migrations\202411032003026_UpdateBookingModel.Designer.cs">
       <DependentUpon>202411032003026_UpdateBookingModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202411040513129_AddRoleToUser.cs" />
+    <Compile Include="Migrations\202411040513129_AddRoleToUser.Designer.cs">
+      <DependentUpon>202411040513129_AddRoleToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411040654524_AddServiceAndUpdateRelations.cs" />
+    <Compile Include="Migrations\202411040654524_AddServiceAndUpdateRelations.Designer.cs">
+      <DependentUpon>202411040654524_AddServiceAndUpdateRelations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411040656117_UpdateUserAndBookingModels.cs" />
+    <Compile Include="Migrations\202411040656117_UpdateUserAndBookingModels.Designer.cs">
+      <DependentUpon>202411040656117_UpdateUserAndBookingModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202411040725562_UpdateServiceIdToNullable.cs" />
+    <Compile Include="Migrations\202411040725562_UpdateServiceIdToNullable.Designer.cs">
+      <DependentUpon>202411040725562_UpdateServiceIdToNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Booking.cs" />
+    <Compile Include="Models\Service.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -319,6 +336,11 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\DichVu\Form.cshtml" />
+    <Content Include="Views\Admin\ManageServices.cshtml" />
+    <Content Include="Views\Admin\AdminOnlyAction.cshtml" />
+    <Content Include="Views\Admin\CreateService.cshtml" />
+    <Content Include="Views\Admin\EditService.cshtml" />
+    <Content Include="Views\Admin\DeleteService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -362,6 +384,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202411032003026_UpdateBookingModel.resx">
       <DependentUpon>202411032003026_UpdateBookingModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411040513129_AddRoleToUser.resx">
+      <DependentUpon>202411040513129_AddRoleToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411040654524_AddServiceAndUpdateRelations.resx">
+      <DependentUpon>202411040654524_AddServiceAndUpdateRelations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411040656117_UpdateUserAndBookingModels.resx">
+      <DependentUpon>202411040656117_UpdateUserAndBookingModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411040725562_UpdateServiceIdToNullable.resx">
+      <DependentUpon>202411040725562_UpdateServiceIdToNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

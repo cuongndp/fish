@@ -1,0 +1,26 @@
+﻿@model fish.Models.Service
+
+@{
+    ViewBag.Title = "Thêm Dịch Vụ Mới";
+}
+
+<h2>Thêm Dịch Vụ Mới</h2>
+
+<form asp-action="CreateService" method="post">
+    <div class="form-group">
+        <label for="TenDichVu">Tên Dịch Vụ</label>
+        <input type="text" id="TenDichVu" name="TenDichVu" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="MoTaDichVu">Mô Tả Dịch Vụ</label>
+        <textarea id="MoTaDichVu" name="MoTaDichVu" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="Gia">Giá</label>
+        <input type="number" id="Gia" name="Gia" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Thêm Dịch Vụ</button>
+</form>

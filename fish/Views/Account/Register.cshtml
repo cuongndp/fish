@@ -88,6 +88,18 @@
             <p class="error">@ViewBag.Error</p>
         }
 
+        <!-- Form chọn vai trò để xử lý hiển thị mật khẩu cấp quyền -->
+        <form method="get" action="@Url.Action("RegisterWithRole", "Account")">
+            <div class="form-group">
+                <label for="role">Vai Trò:</label>
+                <select id="role" name="role" class="form-control" onchange="this.form.submit()">
+                    <option value="Customer" @(ViewBag.SelectedRole == "Customer" ? "selected" : "")>Khách Hàng</option>
+                    <option value="Doctor" @(ViewBag.SelectedRole == "Doctor" ? "selected" : "")>Bác Sĩ</option>
+                    <option value="Admin" @(ViewBag.SelectedRole == "Admin" ? "selected" : "")>Admin</option>
+                </select>
+            </div>
+        </form>
+
         <form method="post" action="@Url.Action("Register", "Account")">
             <input type="text" id="fullName" name="fullName" placeholder="Họ và tên" required />
             <input type="email" id="email" name="email" placeholder="Gmail" required />
@@ -96,6 +108,15 @@
             <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
             <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu" required />
 
+            @if (ViewBag.SelectedRole == "Doctor" || ViewBag.SelectedRole == "Admin")
+            {
+                <div class="form-group">
+                    <label for="rolePassword">Mật khẩu cấp quyền:</label>
+                    <input type="password" id="rolePassword" name="rolePassword" class="form-control" required>
+                </div>
+            }
+
+            <input type="hidden" name="role" value="@ViewBag.SelectedRole" />
             <button type="submit">Đăng ký</button>
         </form>
 

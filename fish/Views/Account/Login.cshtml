@@ -88,6 +88,14 @@
             <p class="error">@ViewBag.Error</p>
         }
 
+
+        @if (Session["Role"] != null)
+        {
+            <p>Chào mừng @Session["Role"] đến với hệ thống!</p>// Đánh dấu cập nhật tại đây
+        }
+
+
+
         <form method="post" action="@Url.Action("Login", "Account")">
             <input type="text" id="username" name="username" placeholder="Username" required />
             <input type="password" id="password" name="password" placeholder="Password" required />

@@ -13,5 +13,8 @@ namespace fish.Models
 
         public DbSet<User> Users { get; set; } // Tạo DbSet cho bảng Users
         public DbSet<Booking> Bookings { get; set; }
+
+
+        public DbSet<Service> Services { get; set; } // Thêm DbSet cho Service
     }
 }

@@ -24,8 +24,12 @@ namespace fish.Models
         public string MoTa { get; set; }
 
 
-
+        // Liên kết với User
         public int UserId { get; set; } // Khóa ngoại
         public virtual User User { get; set; } // Navigation property
+
+        // Liên kết với Service
+        public int? ServiceId { get; set; } // Khóa ngoại cho dịch vụ
+        public virtual Service Service { get; set; } // Navigation property
     }
 }

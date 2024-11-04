@@ -13,5 +13,10 @@ namespace fish.Models
         public string PhoneNumber { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Role { get; set; } // Vai trò: Customer, Doctor, Admin
+
+
+        // Quan hệ: Một user có thể có nhiều booking
+        public virtual ICollection<Booking> Bookings { get; set; }
     }
 }
