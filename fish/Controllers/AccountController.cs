@@ -189,7 +189,7 @@ namespace fish.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa)
+        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa, decimal giaTien)
         {
 
 
@@ -228,6 +228,7 @@ namespace fish.Controllers
                 NgayHen = parsedNgayHen,
                 GioHen = parsedGioHen,
                 MoTa = moTa,
+                GiaTien = giaTien,
                 UserId = Convert.ToInt32(Session["UserId"]),
                  // Thêm ServiceId vào Booking
             };
@@ -587,7 +588,97 @@ namespace fish.Controllers
             return RedirectToAction("AdminOnlyAction"); // Trang quản lý người dùng
         }
 
+
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditBookings(Booking booking)
+        {
+            // Kiểm tra quyền truy cập của Admin
+            if (Session["Role"]?.ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Kiểm tra xem model có hợp lệ không
+            if (ModelState.IsValid)
+            {
+                // Tìm booking từ cơ sở dữ liệu
+                var existingBooking = db.Bookings.Find(booking.Id);
+                if (existingBooking == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cập nhật thông tin booking
+                existingBooking.DiaChi = booking.DiaChi;
+                existingBooking.NgayHen = booking.NgayHen;
+                existingBooking.GioHen = booking.GioHen;
+                existingBooking.GiaTien = booking.GiaTien;  // sửa giá tiền 
+                existingBooking.MoTa = booking.MoTa;
+
+                db.Entry(existingBooking).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("AdminOnlyAction");
+            }
+
+            // Nếu cập nhật không thành công, truyền lại thông tin cần thiết để hiển thị form
+            ViewBag.Users = db.Users.ToList();
+            ViewBag.Services = db.Services.ToList();
+            ViewBag.BookingToEdit = booking;  // Giữ lại thông tin booking vừa nhập để hiển thị lại
+
+            return View("AdminOnlyAction");
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Sử dụng để xác thực mã AntiForgeryToken
+        public ActionResult DeleteBooking(int id)
+        {
+            // Kiểm tra quyền truy cập của Admin
+            if (Session["Role"]?.ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Tìm Booking theo ID
+            var booking = db.Bookings.Find(id);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+                // Xóa booking khỏi cơ sở dữ liệu
+                db.Bookings.Remove(booking);
+                db.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
+            }
+            catch (Exception ex)
+            {
+                // Ghi nhật ký lỗi và hiển thị thông báo lỗi trong View
+                ViewBag.Error = "Đã xảy ra lỗi khi xóa: " + ex.Message;
+                return View("AdminOnlyAction"); // Hiển thị lại trang với thông báo lỗi
+            }
+            // Chuyển hướng về trang quản lý dịch vụ và người dùng
+            return RedirectToAction("AdminOnlyAction");
+        }
+
+
+
+
+
+
     }
+
+
+
+
 
 
 }

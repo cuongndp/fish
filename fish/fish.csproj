@@ -166,6 +166,10 @@
     <Compile Include="Migrations\202411050504440_AddAddressToBooking.Designer.cs">
       <DependentUpon>202411050504440_AddAddressToBooking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202411050711134_UpdateDatabaseSchema.cs" />
+    <Compile Include="Migrations\202411050711134_UpdateDatabaseSchema.Designer.cs">
+      <DependentUpon>202411050711134_UpdateDatabaseSchema.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Booking.cs" />
@@ -404,6 +408,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202411050504440_AddAddressToBooking.resx">
       <DependentUpon>202411050504440_AddAddressToBooking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411050711134_UpdateDatabaseSchema.resx">
+      <DependentUpon>202411050711134_UpdateDatabaseSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -25,6 +25,9 @@ namespace fish.Models
         public string MoTa { get; set; }
 
 
+        public decimal GiaTien { get; set; }
+
+
         // Liên kết với User
         public int UserId { get; set; } // Khóa ngoại
         public virtual User User { get; set; } // Navigation property

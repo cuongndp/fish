@@ -27,7 +27,7 @@
             max-width: 100%; /* Giới hạn chiều rộng để phù hợp với kích thước của trang */
             white-space: nowrap; /* Không cho nội dung xuống dòng */
         }
-    
+
 
         .container {
             max-width: 1200px;
@@ -129,7 +129,7 @@
         }
     </ul>
 
-    <div class="container table-container" >
+    <div class="container table-container">
         <div class="header">
             <h1>Quản Lý Dịch Vụ và Người Dùng</h1>
         </div>
@@ -145,24 +145,30 @@
                     <th>Ngày Hẹn</th>
                     <th>Giờ Hẹn</th>
                     <th>Mô Tả</th>
+                    <th>Giá Tiền</th>
                     <th>Hành Động</th>
                 </tr>
             </thead>
             <tbody>
-                @if (ViewBag.Bookings != null )
+                @if (ViewBag.Bookings != null)
                 {
                     foreach (var booking in ViewBag.Bookings)
                     {
                         <tr>
-                            <td>@booking.Id</td>
+                            <!-- Hiển thị ID người dùng nếu thông tin người dùng có tồn tại -->
+                            <td>@(booking.User != null ? booking.User.Id : "Không có thông tin người dùng")</td>
                             <td>@(booking.User != null ? booking.User.FullName : "Không có thông tin người dùng")</td>
                             <td>@booking.DiaChi</td>
                             <td>@(booking.NgayHen != null ? booking.NgayHen.ToString("dd/MM/yyyy") : "Không có ngày hẹn")</td>
                             <td>@booking.GioHen</td>
                             <td>@booking.MoTa</td>
+                            <td>@booking.GiaTien.ToString("N0") VND</td>
                             <td>
-                                <a href="@Url.Action("EditBooking", "Admin", new { id = booking.Id })" class="btn btn-edit">Sửa</a>
-                                <a href="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })" class="btn btn-delete">Xóa</a>
+                                <a href="@Url.Action("AdminOnlyAction", "Admin", new { editBookingId = booking.Id })" class="btn btn-edit">Sửa</a> <!-- Đảm bảo sử dụng đúng tên tham số editBookingId -->
+                                <form action="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken() <!-- Token chống CSRF để bảo mật -->
+                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa thông tin này?');">Xóa</button>
+                                </form>
                             </td>
                         </tr>
                     }
@@ -170,9 +176,10 @@
                 else
                 {
                     <tr>
-                        <td colspan="6">Không có dữ liệu đặt lịch để hiển thị.</td>
+                        <td colspan="7">Không có dữ liệu đặt lịch để hiển thị.</td> <!-- Thay đổi colspan cho phù hợp với số cột -->
                     </tr>
                 }
+
             </tbody>
         </table>
 
@@ -261,5 +268,74 @@
     }
 }
 
+
+
+@if (ViewBag.BookingToEdit != null)
+{
+    <h3>Chỉnh Sửa Thông Tin Đặt Lịch</h3>
+    using (Html.BeginForm("EditBookings", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken() <!-- Thêm mã bảo mật để chống CSRF -->
+
+        <!-- Ẩn trường Id để giữ giá trị booking cần chỉnh sửa -->
+        <input type="hidden" name="Id" value="@ViewBag.BookingToEdit.Id" />
+
+        <div class="form-group">
+            <label for="DiaChi">Địa Chỉ</label>
+            <input type="text" name="DiaChi" value="@ViewBag.BookingToEdit.DiaChi" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="NgayHen">Ngày Hẹn</label>
+            <input type="date" name="NgayHen" value="@ViewBag.BookingToEdit.NgayHen.ToString("yyyy-MM-dd")" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="GioHen">Giờ Hẹn</label>
+            <input type="time" name="GioHen" value="@ViewBag.BookingToEdit.GioHen.ToString(@"hh\:mm")" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="giaTien">Giá Tiền:</label>
+            <input type="number" id="giaTien" name="giaTien" step="10000" list="priceOptions" required>
+            <span>VND</span>
+            <!-- Danh sách các giá tiền có sẵn để chọn -->
+            <datalist id="priceOptions">
+                <option value="100000"></option>
+                <option value="200000"></option>
+                <option value="300000"></option>
+                <option value="400000"></option>
+                <option value="500000"></option>
+            </datalist>
+        </div>
+
+        <div style="
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    font-size: 1.1em;
+    background-color: #f9f9f9;
+    color: #333;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;">
+
+            <label for="MoTa">Mô Tả Vấn Đề Của Cá Koi</label>
+
+            <textarea name="MoTa" rows="4" required style="
+        width: 100% !important;
+        padding: 12px !important;
+        border: 2px solid #28a745 !important;
+        border-radius: 10px !important;
+        font-size: 1.1em !important;
+        background-color: #f9f9f9 !important;
+        color: #333 !important;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease !important;">@ViewBag.BookingToEdit.MoTa</textarea>
+        </div>
+
+
+        <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer">Cập Nhật</button>
+    }
+}
 
 
