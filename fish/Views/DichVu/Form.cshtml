@@ -118,6 +118,11 @@
             <p>@Session["Email"]</p> <!-- Thêm thông tin email từ Session hoặc cơ sở dữ liệu -->
         </div>
 
+        <!-- Thêm địa chỉ -->
+        <div class="form-group">
+            <label for="appointmentAddress">Địa Chỉ:</label>
+            <input type="text" id="appointmentAddress" name="diaChi" class="form-control" required>
+        </div>
         <!-- Chọn ngày và giờ -->
         <div class="form-group">
             <label for="appointmentDate">Ngày Hẹn:</label>
@@ -135,7 +140,7 @@
             <textarea id="description" name="moTa" class="form-control" rows="4" required></textarea>
         </div>
 
-        
+
 
 
         <button type="submit" class="btn-submit">Đặt Lịch</button>

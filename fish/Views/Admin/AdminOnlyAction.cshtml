@@ -141,6 +141,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Tên Dịch Vụ</th>
+                    <th>Địa Chỉ</th>
                     <th>Ngày Hẹn</th>
                     <th>Giờ Hẹn</th>
                     <th>Mô Tả</th>
@@ -155,6 +156,7 @@
                         <tr>
                             <td>@booking.Id</td>
                             <td>@(booking.User != null ? booking.User.FullName : "Không có thông tin người dùng")</td>
+                            <td>@booking.DiaChi</td>
                             <td>@(booking.NgayHen != null ? booking.NgayHen.ToString("dd/MM/yyyy") : "Không có ngày hẹn")</td>
                             <td>@booking.GioHen</td>
                             <td>@booking.MoTa</td>

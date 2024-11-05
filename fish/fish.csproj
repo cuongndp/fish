@@ -162,6 +162,10 @@
     <Compile Include="Migrations\202411040725562_UpdateServiceIdToNullable.Designer.cs">
       <DependentUpon>202411040725562_UpdateServiceIdToNullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202411050504440_AddAddressToBooking.cs" />
+    <Compile Include="Migrations\202411050504440_AddAddressToBooking.Designer.cs">
+      <DependentUpon>202411050504440_AddAddressToBooking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Booking.cs" />
@@ -397,6 +401,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202411040725562_UpdateServiceIdToNullable.resx">
       <DependentUpon>202411040725562_UpdateServiceIdToNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202411050504440_AddAddressToBooking.resx">
+      <DependentUpon>202411050504440_AddAddressToBooking.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
