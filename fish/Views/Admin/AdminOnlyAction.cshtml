@@ -117,10 +117,10 @@
     <ul class="user-auth-menu">
         @if (Session["FullName"] != null)
         {
-            <div class="logged-in-info">
+            <li class="logged-in-info">
                 <span>Xin chào, @Session["FullName"]!</span>
                 <a href="@Url.Action("Logout", "Account")" class="logout-button-unique">Đăng xuất</a>
-            </div>
+            </li>
         }
         else
         {
@@ -136,17 +136,17 @@
 
         <!-- Bảng danh sách dịch vụ -->
         <h2>Danh Sách Dịch Vụ</h2>
-        <table>
+        <table style="table-layout: fixed; width: 100%;">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Tên Dịch Vụ</th>
-                    <th>Địa Chỉ</th>
-                    <th>Ngày Hẹn</th>
-                    <th>Giờ Hẹn</th>
-                    <th>Mô Tả</th>
-                    <th>Giá Tiền</th>
-                    <th>Hành Động</th>
+                    <th style="width: 5%;">ID</th>
+                    <th style="width: 25%;">Họ Và Tên</th> <!-- Tăng chiều rộng của cột Họ Và Tên -->
+                    <th style="width: 20%;">Địa Chỉ</th> <!-- Giảm chiều rộng của cột Địa Chỉ -->
+                    <th style="width: 10%;">Ngày Hẹn</th>
+                    <th style="width: 10%;">Giờ Hẹn</th>
+                    <th style="width: 15%;">Mô Tả</th> <!-- Giảm chiều rộng của cột Mô Tả -->
+                    <th style="width: 10%;">Giá Tiền</th>
+                    <th style="width: 10%;">Hành Động</th>
                 </tr>
             </thead>
             <tbody>
@@ -158,10 +158,10 @@
                             <!-- Hiển thị ID người dùng nếu thông tin người dùng có tồn tại -->
                             <td>@(booking.User != null ? booking.User.Id : "Không có thông tin người dùng")</td>
                             <td>@(booking.User != null ? booking.User.FullName : "Không có thông tin người dùng")</td>
-                            <td>@booking.DiaChi</td>
+                            <td style="word-wrap: break-word; white-space: normal;">@booking.DiaChi</td>
                             <td>@(booking.NgayHen != null ? booking.NgayHen.ToString("dd/MM/yyyy") : "Không có ngày hẹn")</td>
                             <td>@booking.GioHen</td>
-                            <td>@booking.MoTa</td>
+                            <td style="word-wrap: break-word; white-space: normal;">@booking.MoTa</td>
                             <td>@booking.GiaTien.ToString("N0") VND</td>
                             <td>
                                 <a href="@Url.Action("AdminOnlyAction", "Admin", new { editBookingId = booking.Id })" class="btn btn-edit">Sửa</a> <!-- Đảm bảo sử dụng đúng tên tham số editBookingId -->

@@ -187,9 +187,26 @@ namespace fish.Controllers
             return View("~/Views/DichVu/Form.cshtml");
         }
 
+
+        [HttpPost]
+        public ActionResult SelectService(int giaTien)
+        {
+            // Lưu giá tiền vào Session để sử dụng lại khi đặt lịch
+            TempData["GiaTien"] = giaTien;
+
+            // Chuyển hướng đến trang đặt lịch
+            return RedirectToAction("Form"); // Thay đổi "Form" thành tên của Action hiển thị trang đặt lịch khám của bạn
+        }
+
+
+
+
+
+
+
         [HttpPost]
         [Authorize]
-        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa, decimal giaTien)
+        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa, decimal? giaTien)
         {
 
 
@@ -218,6 +235,27 @@ namespace fish.Controllers
                 return View("~/Views/DichVu/Form.cshtml");
             }
 
+
+            // Kiểm tra giá tiền từ TempData nếu `giaTien` không được truyền
+            if (!giaTien.HasValue)
+            {
+                if (TempData["GiaTien"] == null) // (CHỖ ĐÃ SỬA): Kiểm tra TempData để xác định xem giá tiền đã được chọn chưa
+                {
+                    ViewBag.Error = "Bạn cần chọn dịch vụ trước khi đặt lịch.";
+                    return View("~/Views/DichVu/Form.cshtml");
+                }
+
+                giaTien = Convert.ToDecimal(TempData["GiaTien"]); // (CHỖ ĐÃ SỬA): Lấy giá tiền từ TempData
+            }
+
+            if (giaTien <= 0)
+            {
+                ViewBag.Error = "Vui lòng chọn dịch vụ trước khi đặt lịch.";
+                return View("~/Views/DichVu/Form.cshtml");
+            }
+
+
+
             // Tạo một đối tượng Booking mới
             var booking = new Booking
             {
@@ -228,7 +266,7 @@ namespace fish.Controllers
                 NgayHen = parsedNgayHen,
                 GioHen = parsedGioHen,
                 MoTa = moTa,
-                GiaTien = giaTien,
+                GiaTien = giaTien.HasValue ? giaTien.Value : 0,
                 UserId = Convert.ToInt32(Session["UserId"]),
                  // Thêm ServiceId vào Booking
             };

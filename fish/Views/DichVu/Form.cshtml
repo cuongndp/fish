@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    
+    decimal giaTien = TempData["GiaTien"] != null ? Convert.ToDecimal(TempData["GiaTien"]) : 0;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt Lịch Khám</title>
     <style>
+        .vvv {
+            display: block; /* Luôn hiển thị danh sách dịch vụ */
+            margin-top: 10px;
+        }
+
+        .vvv-btn {
+            display: block;
+            margin: 5px 0;
+        }
+
         /* CSS cơ bản để tạo kiểu cho trang */
         * {
             box-sizing: border-box;
@@ -86,7 +100,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="bookingForm" class="container" style="padding-top: 250px;">
         <h1 class="main-heading">Đặt Lịch Khám Cho Cá Koi</h1>
 
         <!-- Hiển thị thông báo thành công nếu có -->
@@ -100,7 +114,7 @@
             <div class="alert alert-danger">@ViewBag.Error</div>
         }
 
-
+        <!-- Bắt đầu biểu mẫu -->
     <form action="/Account/SubmitBooking" method="post">
         <!-- Hiển thị thông tin khách hàng đã đăng nhập -->
         <div class="form-group">
@@ -123,6 +137,7 @@
             <label for="appointmentAddress">Địa Chỉ:</label>
             <input type="text" id="appointmentAddress" name="diaChi" class="form-control" required>
         </div>
+
         <!-- Chọn ngày và giờ -->
         <div class="form-group">
             <label for="appointmentDate">Ngày Hẹn:</label>
@@ -140,16 +155,112 @@
             <textarea id="description" name="moTa" class="form-control" rows="4" required></textarea>
         </div>
 
+        <!-- Giá tiền -->
         <div class="form-group">
             <label for="giaTien">Giá Tiền:</label>
-            <!-- Đặt giá tiền là chỉ đọc -->
-            <input type="number" id="giaTien" name="giaTien" value="500000" readonly step="0.01" required>
+            <input type="number" id="giaTien" name="giaTien" value="@giaTien" readonly step="0.01" required>
+            <span style="margin-left: 8px;">VND</span>
         </div>
 
+        <!-- Nút để chọn dịch vụ -->
+        <button type="button" class="btn-toggle" onclick="toggleServiceList()">Chọn Dịch Vụ</button>
+
+        <!-- Danh sách dịch vụ -->
+        <div class="vvv" id="serviceList">
+            <h3 style="text-align: center; color: #007bff;">Chọn dịch vụ:</h3>
+            <!-- Cập nhật giao diện của danh sách dịch vụ -->
+            <button type="button" class="vvv-btn" onclick="chonDichVu(300000)">Khám sức khỏe tổng quát</button>
+            <button type="button" class="vvv-btn" onclick="chonDichVu(250000)">Điều trị bệnh truyền nhiễm</button>
+            <button type="button" class="vvv-btn" onclick="chonDichVu(100000)">Xét nghiệm chất lượng nước</button>
+            <button type="button" class="vvv-btn" onclick="chonDichVu(450000)">Phẫu thuật và điều trị vết thương</button>
+            <button type="button" class="vvv-btn" onclick="chonDichVu(50000)">Tư vấn dinh dưỡng và chăm sóc</button>
+        </div>
+
+        <style>
+            /* CSS cho danh sách dịch vụ và các nút bên trong */
+            .vvv {
+                display: none; /* Ẩn danh sách dịch vụ mặc định */
+                margin-top: 20px;
+                border: 1px solid #ccc;
+                padding: 20px;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+                .vvv h3 {
+                    margin-bottom: 15px;
+                    font-size: 1.5em;
+                    color: #007bff;
+                }
+
+            .vvv-btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+                padding: 12px;
+                background-color: #e0f7fa;
+                color: #007bff;
+                border: 1px solid #007bff;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                transition: all 0.3s ease;
+                font-size: 1em;
+            }
+
+                .vvv-btn:hover {
+                    background-color: #007bff;
+                    color: #fff;
+                }
+
+            /* Cải thiện giao diện của nút "Chọn Dịch Vụ" */
+            .btn-toggle {
+                padding: 12px;
+                background-color: #00bcd4;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1em;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+                .btn-toggle:hover {
+                    background-color: #008c9e;
+                }
+        </style>
+
+        <script>
+            function toggleServiceList() {
+                // Hiển thị hoặc ẩn danh sách dịch vụ khi nhấn vào nút "Chọn Dịch Vụ"
+                const serviceList = document.getElementById('serviceList');
+                serviceList.style.display = (serviceList.style.display === 'none' || serviceList.style.display === '') ? 'block' : 'none';
+                
+            }
+
+            function chonDichVu(gia) {
+                // Cập nhật giá tiền vào ô nhập khi người dùng chọn dịch vụ
+                document.getElementById("giaTien").value = gia;
+                // Ẩn danh sách dịch vụ sau khi chọn xong
+                document.getElementById('serviceList').style.display = 'none';
+                
+                
+            }
+        </script>
 
 
+        <!-- Nút để gửi biểu mẫu -->
         <button type="submit" class="btn-submit">Đặt Lịch</button>
     </form>
     </div>
 </body>
 </html>
+
+
+<script>
+    function chonDichVu(gia) {
+        // Cập nhật giá tiền vào ô nhập khi người dùng chọn dịch vụ
+        document.getElementById("giaTien").value = gia;
+    }
+</script>
