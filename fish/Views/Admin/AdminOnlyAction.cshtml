@@ -141,13 +141,14 @@
                 <tr>
                     <th>ID</th>
                     <th>Tên Dịch Vụ</th>
+                    <th>Ngày Hẹn</th>
+                    <th>Giờ Hẹn</th>
                     <th>Mô Tả</th>
-                    <th>Giá</th>
                     <th>Hành Động</th>
                 </tr>
             </thead>
             <tbody>
-                @if (ViewBag.Bookings != null && ViewBag.Bookings.Any())
+                @if (ViewBag.Bookings != null )
                 {
                     foreach (var booking in ViewBag.Bookings)
                     {

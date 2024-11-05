@@ -284,6 +284,9 @@ namespace fish.Controllers
             return View(services);
         }
 
+
+
+        /*
         [Authorize]
        
         public ActionResult AdminOnlyAction(int? editUserId = null)
@@ -305,13 +308,53 @@ namespace fish.Controllers
                 }
             }
 
-
+        
 
 
             return View();
         }
+        */
 
-        [Authorize(Roles = "Admin")]
+
+
+
+
+
+
+        public ActionResult AdminOnlyAction(int? editBookingId = null)
+        {
+            if (Session["Role"]?.ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Lấy danh sách người dùng và dịch vụ từ database
+            ViewBag.Users = db.Users.ToList();
+            ViewBag.Services = db.Services.ToList();
+            ViewBag.Bookings = db.Bookings.Include("Service").Include("User").ToList(); // Lấy danh sách bookings với thông tin liên quan
+
+            // Kiểm tra nếu có editBookingId để chỉnh sửa thông tin booking
+            if (editBookingId.HasValue)
+            {
+                var bookingToEdit = db.Bookings.Include("Service").Include("User").FirstOrDefault(b => b.Id == editBookingId);
+                if (bookingToEdit != null)
+                {
+                    ViewBag.BookingToEdit = bookingToEdit;
+                }
+            }
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+            [Authorize(Roles = "Admin")]
         public ActionResult CreateService()
         {
             return View();
@@ -375,8 +418,8 @@ namespace fish.Controllers
         [Authorize(Roles = "Admin,Doctor")]
         public ActionResult ManageBookings()
         {
-            var bookings = db.Bookings.Include("Service").Include("User").ToList();
-            ViewBag.Bookings = bookings;// Gán danh sách lịch đặt vào ViewBag
+            var bookings = db.Bookings.Include("Bookings").Include("Service").Include("User").ToList();
+            ViewBag.Bookings = db.Bookings.ToList();// Gán danh sách lịch đặt vào ViewBag
             return View(bookings);
         }
 
