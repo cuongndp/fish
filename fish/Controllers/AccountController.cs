@@ -189,7 +189,7 @@ namespace fish.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult SubmitBooking(string ngayHen, string gioHen, string moTa)
+        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa)
         {
 
 
@@ -224,6 +224,7 @@ namespace fish.Controllers
                 FullName = Session["FullName"]?.ToString(),
                 PhoneNumber = Session["PhoneNumber"]?.ToString(),
                 Email = Session["Email"]?.ToString(),
+                DiaChi = diachi,
                 NgayHen = parsedNgayHen,
                 GioHen = parsedGioHen,
                 MoTa = moTa,
@@ -321,7 +322,7 @@ namespace fish.Controllers
 
 
 
-        public ActionResult AdminOnlyAction(int? editBookingId = null)
+        public ActionResult AdminOnlyAction(int? editBookingId = null, int? editUserId = null)
         {
             if (Session["Role"]?.ToString() != "Admin")
             {
@@ -340,6 +341,14 @@ namespace fish.Controllers
                 if (bookingToEdit != null)
                 {
                     ViewBag.BookingToEdit = bookingToEdit;
+                }
+            }
+            if (editUserId.HasValue)
+            {
+                var userToEdit = db.Users.FirstOrDefault(u => u.Id == editUserId);
+                if (userToEdit != null)
+                {
+                    ViewBag.UserToEdit = userToEdit;
                 }
             }
 
