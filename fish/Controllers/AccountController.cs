@@ -182,7 +182,8 @@ namespace fish.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            
+            // Lấy danh sách bác sĩ để hiển thị
+            ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
 
             return View("~/Views/DichVu/Form.cshtml");
         }
@@ -206,7 +207,7 @@ namespace fish.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa, decimal? giaTien)
+        public ActionResult SubmitBooking(string diachi,string ngayHen, string gioHen, string moTa, decimal? giaTien, int? doctorId = null)
         {
 
 
@@ -268,7 +269,8 @@ namespace fish.Controllers
                 MoTa = moTa,
                 GiaTien = giaTien.HasValue ? giaTien.Value : 0,
                 UserId = Convert.ToInt32(Session["UserId"]),
-                 // Thêm ServiceId vào Booking
+                DoctorId = doctorId // Thêm DoctorId nếu người dùng chọn bác sĩ
+                                    // Thêm ServiceId vào Booking
             };
 
             // Thêm đối tượng vào DbSet và lưu thay đổi
@@ -546,8 +548,8 @@ namespace fish.Controllers
                 return View(booking);
             }
 
-            // Gán bác sĩ cho lịch đặt
-            booking.UserId = doctorId;
+            // Gán bác sĩ cho lịch đặt bằng thuộc tính DoctorId
+            booking.DoctorId = doctorId; // Thay vì UserId, hãy sử dụng DoctorId
             db.Entry(booking).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 

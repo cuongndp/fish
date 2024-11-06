@@ -155,6 +155,24 @@
             <textarea id="description" name="moTa" class="form-control" rows="4" required></textarea>
         </div>
 
+
+
+        <!-- Dropdown để chọn bác sĩ -->
+        <div class="form-group">
+            <label for="doctorSelect">Chọn Bác Sĩ:</label>
+            <select id="doctorSelect" name="doctorId" class="form-control" required>
+                <option value="">Chọn bác sĩ</option>
+                @foreach (var doctor in ViewBag.Doctors)
+                {
+                    <option value="@doctor.Id">@doctor.FullName</option>
+                }
+            </select>
+        </div>
+
+
+
+
+
         <!-- Giá tiền -->
         <div class="form-group">
             <label for="giaTien">Giá Tiền:</label>
@@ -236,7 +254,7 @@
                 // Hiển thị hoặc ẩn danh sách dịch vụ khi nhấn vào nút "Chọn Dịch Vụ"
                 const serviceList = document.getElementById('serviceList');
                 serviceList.style.display = (serviceList.style.display === 'none' || serviceList.style.display === '') ? 'block' : 'none';
-                
+
             }
 
             function chonDichVu(gia) {
@@ -244,8 +262,8 @@
                 document.getElementById("giaTien").value = gia;
                 // Ẩn danh sách dịch vụ sau khi chọn xong
                 document.getElementById('serviceList').style.display = 'none';
-                
-                
+
+
             }
         </script>
 
