@@ -20,7 +20,6 @@ namespace fish.Controllers
         {
             if (Session["UserId"] == null || Session["Role"]?.ToString() != "Doctor")
             {
-                // Nếu chưa đăng nhập hoặc không phải là bác sĩ, chuyển hướng về trang đăng nhập
                 return RedirectToAction("Login", "Account");
             }
 
@@ -33,6 +32,8 @@ namespace fish.Controllers
             var bookings = db.Bookings.Where(b => b.DoctorId == doctorId).ToList();
 
             return View("~/Views/BacSi/DoctorSchedule.cshtml", bookings);
+
+
         }
     }
 

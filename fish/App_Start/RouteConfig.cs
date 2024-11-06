@@ -45,6 +45,16 @@ namespace fish
                 defaults: new { controller = "Account", action = "BookingForm" }
             );
 
+
+            // Route tùy chỉnh cho DoctorSchedule
+            routes.MapRoute(
+                name: "DoctorScheduleRoute",
+                url: "BacSi/DoctorSchedule",
+                defaults: new { controller = "Doctor", action = "DoctorSchedule" }
+            );
+
+
+
             // Route mặc định
             routes.MapRoute(
                 name: "Default",
