@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
@@ -52,6 +53,11 @@ namespace fish.Controllers
                     return RedirectToAction("AdminOnlyAction", "Admin");
                 }
 
+
+                if (user.Role == "Doctor")
+                {
+                    return RedirectToAction("DoctorSchedule", "Doctor");
+                }
 
 
 
@@ -171,23 +177,11 @@ namespace fish.Controllers
             // Nếu là Admin, cho phép truy cập
             return View();
         }
+         
+        
 
-        [Authorize]
-        public ActionResult BookingForm()
-        {
-            // Gỡ lỗi: kiểm tra xem Session có hoạt động không
-            if (Session["UserId"] == null)
-            {
-                // Nếu không có thông tin đăng nhập, chuyển hướng về trang đăng nhập
-                return RedirectToAction("Login", "Account");
-            }
 
-            // Lấy danh sách bác sĩ để hiển thị
-            ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
-
-            return View("~/Views/DichVu/Form.cshtml");
-        }
-
+        
 
         [HttpPost]
         public ActionResult SelectService(int giaTien)
@@ -198,6 +192,40 @@ namespace fish.Controllers
             // Chuyển hướng đến trang đặt lịch
             return RedirectToAction("Form"); // Thay đổi "Form" thành tên của Action hiển thị trang đặt lịch khám của bạn
         }
+
+
+
+
+        [Authorize]
+        public ActionResult BookingForm()
+        {
+            // Kiểm tra xem người dùng đã đăng nhập chưa
+            if (Session["UserId"] == null)
+            {
+                // Nếu chưa đăng nhập, chuyển hướng người dùng về trang đăng nhập
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Lấy danh sách bác sĩ từ cơ sở dữ liệu và gán vào ViewBag
+            ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
+
+
+            // Ép kiểu ViewBag.Doctors để kiểm tra
+            var doctors = ViewBag.Doctors as List<User>;
+
+
+            // Kiểm tra nếu danh sách bác sĩ là null hoặc trống
+            if (doctors == null || !doctors.Any())
+            {
+                ViewBag.Error = "Hiện tại không có bác sĩ nào để chọn.";
+            }
+
+
+
+            // Trả về view biểu mẫu đặt lịch
+            return View("~/Views/DichVu/Form.cshtml");
+        }
+
 
 
 
@@ -214,6 +242,7 @@ namespace fish.Controllers
             if (Session["UserId"] == null)
             {
                 ViewBag.Error = "Bạn cần đăng nhập để đặt lịch.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
                 return View("~/Views/DichVu/Form.cshtml");
             }
 
@@ -226,6 +255,7 @@ namespace fish.Controllers
             if (!DateTime.TryParseExact(ngayHen, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedNgayHen))
             {
                 ViewBag.Error = "Ngày hẹn không hợp lệ.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
                 return View("~/Views/DichVu/Form.cshtml");
             }
 
@@ -233,6 +263,7 @@ namespace fish.Controllers
             if (!TimeSpan.TryParse(gioHen, out parsedGioHen))
             {
                 ViewBag.Error = "Giờ hẹn không hợp lệ.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
                 return View("~/Views/DichVu/Form.cshtml");
             }
 
@@ -243,6 +274,7 @@ namespace fish.Controllers
                 if (TempData["GiaTien"] == null) // (CHỖ ĐÃ SỬA): Kiểm tra TempData để xác định xem giá tiền đã được chọn chưa
                 {
                     ViewBag.Error = "Bạn cần chọn dịch vụ trước khi đặt lịch.";
+                    ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
                     return View("~/Views/DichVu/Form.cshtml");
                 }
 
@@ -252,8 +284,26 @@ namespace fish.Controllers
             if (giaTien <= 0)
             {
                 ViewBag.Error = "Vui lòng chọn dịch vụ trước khi đặt lịch.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
                 return View("~/Views/DichVu/Form.cshtml");
             }
+
+
+
+            if (!doctorId.HasValue)
+            {
+                ViewBag.Error = "Vui lòng chọn bác sĩ trước khi đặt lịch.";
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
+                return View("~/Views/DichVu/Form.cshtml");
+            }
+
+
+
+
+
+
+
+
 
 
 
@@ -283,8 +333,10 @@ namespace fish.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = "Đã xảy ra lỗi: " + ex.Message;
+                ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList(); // Gán lại danh sách bác sĩ nếu có lỗi
                 return View("~/Views/DichVu/Form.cshtml");
             }
+            ViewBag.Doctors = db.Users.Where(u => u.Role == "Doctor").ToList();
 
             return View("~/Views/DichVu/Form.cshtml");
         }
@@ -325,38 +377,6 @@ namespace fish.Controllers
             var services = db.Services.ToList();
             return View(services);
         }
-
-
-
-        /*
-        [Authorize]
-       
-        public ActionResult AdminOnlyAction(int? editUserId = null)
-        {
-            if (Session["Role"]?.ToString() != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            ViewBag.Users = db.Users.ToList();
-            ViewBag.Services = db.Services.ToList();
-
-
-            if (editUserId.HasValue)
-            {
-                var userToEdit = db.Users.Find(editUserId);
-                if (userToEdit != null)
-                {
-                    ViewBag.UserToEdit = userToEdit;
-                }
-            }
-
-        
-
-
-            return View();
-        }
-        */
-
 
 
 
@@ -463,15 +483,7 @@ namespace fish.Controllers
             return RedirectToAction("ManageServices");
         }
 
-        /*
-        // Hiển thị danh sách lịch đặt của khách hàng
-        [Authorize(Roles = "Admin,Doctor")]
-        public ActionResult ManageBookings()
-        {
-            var bookings = db.Bookings.Include("Bookings").Include("Service").Include("User").ToList();
-            ViewBag.Bookings = db.Bookings.ToList();// Gán danh sách lịch đặt vào ViewBag
-            return View(bookings);
-        }*/
+        
 
 
         public ActionResult ManageBookings(int? editBookingId = null)

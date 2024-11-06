@@ -117,6 +117,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Index1Controller.cs" />
     <Compile Include="Controllers\DichVuController.cs" />
@@ -351,9 +352,11 @@
     <Content Include="Views\Admin\CreateService.cshtml" />
     <Content Include="Views\Admin\EditService.cshtml" />
     <Content Include="Views\Admin\DeleteService.cshtml" />
+    <Content Include="Views\BacSi\DoctorSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Doctor\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202411031109405_InitialCreate.resx">
